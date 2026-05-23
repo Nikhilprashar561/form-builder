@@ -19,9 +19,9 @@ export const usersTable = pgTable("users", {
   password: text('password'),
 
   otp: varchar("otp", { length: 10 }).notNull(),
-  expiresAt: timestamp("expires_at", {
+  otpExpiresAt: timestamp("expires_at", {
     withTimezone: true,
-  }).notNull(),
+  }),
 
   profileImageUrl: text("profile_image_url"),
 
