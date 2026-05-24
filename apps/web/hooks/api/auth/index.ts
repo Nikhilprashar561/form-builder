@@ -105,3 +105,75 @@ export const useUser = () => {
     status,
   };
 };
+
+/**
+ * Hook for user sign-out
+ * Clears user session and invalidates cache
+ */
+export const useSignOut = () => {
+  const utils = trpc.useUtils();
+
+  const {
+    mutateAsync: signOutAsync,
+    mutate: signOut,
+    error,
+  } = trpc.auth.signOut.useMutation({
+    onSuccess: async () => {
+      await utils.auth.getLoggedInUserInfo.invalidate();
+    },
+  });
+
+  return {
+    signOutAsync,
+    signOut,
+    error,
+  };
+};
+
+/**
+ * Hook for updating user profile
+ * Mutates user profile information
+ */
+export const useUpdateProfile = () => {
+  const utils = trpc.useUtils();
+
+  const {
+    mutateAsync: updateProfileAsync,
+    mutate: updateProfile,
+    error,
+  } = trpc.auth.updateProfile.useMutation({
+    onSuccess: async () => {
+      await utils.auth.getLoggedInUserInfo.invalidate();
+    },
+  });
+
+  return {
+    updateProfileAsync,
+    updateProfile,
+    error,
+  };
+};
+
+/**
+ * Hook for deleting user account
+ * Permanently deletes user and all associated data
+ */
+export const useDeleteAccount = () => {
+  const utils = trpc.useUtils();
+
+  const {
+    mutateAsync: deleteAccountAsync,
+    mutate: deleteAccount,
+    error,
+  } = trpc.auth.deleteAccount.useMutation({
+    onSuccess: async () => {
+      await utils.invalidate();
+    },
+  });
+
+  return {
+    deleteAccountAsync,
+    deleteAccount,
+    error,
+  };
+};

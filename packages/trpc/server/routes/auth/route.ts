@@ -1,7 +1,8 @@
 import { userService } from "../../services";
 import { authenticationProcedure, publicProcedure, router } from "../../trpc";
-import { setAuthenticationCookie } from "../../utils/cookies";
+import { setAuthenticationCookie, clearAuthenticationCookie } from "../../utils/cookies";
 import { generatePath } from "../../utils/path-generator";
+import { z } from "zod";
 import {
   createUserWithEmailAndPasswordInputModel,
   createUserWithEmailAndPasswordOutputModel,
@@ -11,6 +12,10 @@ import {
   signInUserWithEmailAndPasswordOutputModel,
   userEmailOtpInput,
   userEmailOtpOutput,
+  signOutOutputModel,
+  updateProfileInputModel,
+  updateProfileOutputModel,
+  deleteAccountOutputModel,
 } from "./model";
 
 const TAGS = ["Authentication"];
@@ -108,5 +113,66 @@ export const authRouter = router({
         fullName,
         profilImageUrl,
       };
+    }),
+
+  signOut: authenticationProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/signOut"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(z.undefined())
+    .output(signOutOutputModel)
+    .mutation(async ({ ctx }) => {
+      clearAuthenticationCookie(ctx);
+      return {
+        message: "Signed out successfully",
+      };
+    }),
+
+  updateProfile: authenticationProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/updateProfile"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(updateProfileInputModel)
+    .output(updateProfileOutputModel)
+    .mutation(async ({ input, ctx }) => {
+      const { email, fullName, id, message } = await userService.updateProfile(ctx.user, {
+        fullName: input.fullName,
+        email: input.email,
+        password: input.password!,
+      });
+
+      return {
+        email,
+        fullName,
+        id,
+        message
+      };
+    }),
+
+  deleteAccount: authenticationProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: getPath("/deleteAccount"),
+        tags: TAGS,
+        protect: true,
+      },
+    })
+    .input(z.undefined())
+    .output(deleteAccountOutputModel)
+    .mutation(async ({ ctx }) => {
+      const result = await userService.deleteAccount(ctx.user);
+      clearAuthenticationCookie(ctx);
+      return result;
     }),
 });

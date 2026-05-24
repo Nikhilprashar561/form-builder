@@ -3,6 +3,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import React, { useState } from "react";
+import { Toaster } from "sonner";
+import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
 
 import { trpc } from "~/trpc/client";
@@ -31,9 +33,11 @@ export const GlobalProviders: React.FC<{ children: React.ReactNode }> = ({ child
         enableSystem
         disableTransitionOnChange
       >
-        <Navbar />
         <trpc.Provider queryClient={queryClient} client={trpcClient}>
-          {children}=
+        <Navbar />
+        <Toaster position="top-right" expand={true}/>
+          {children}
+         <Footer /> 
         </trpc.Provider>
       </NextThemesProvider>
     </QueryClientProvider>

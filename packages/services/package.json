@@ -10,10 +10,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@repo/utils": "workspace:*",
     "@repo/database": "workspace:*",
-    "@repo/trpc": "workspace:*",
     "@repo/logger": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "@trpc/server": "^11.8.1",
     "google-auth-library": "^10.5.0",
     "jsonwebtoken": "^9.0.3",
     "zod": "^4.3.5"

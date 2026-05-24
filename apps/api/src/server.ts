@@ -17,13 +17,12 @@ const openApiDocument = generateOpenApiDocument(serverRouter, {
   baseUrl: env.BASE_URL.concat("/api"),
 });
 
-if (env.NODE_ENV !== "prod") {
   app.use(
     cors({
-      origin: "*",
+      origin: "http://localhost:3000",
+      credentials: true
     }),
-  );
-}
+  )
 
 app.use(express.json());
 
@@ -58,5 +57,24 @@ app.use(
     createContext,
   }),
 );
+
+// ✅ Global error handler middleware - MUST be last
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  logger.error("Unhandled error:", {
+    message: err?.message,
+    code: err?.code,
+    stack: err?.stack,
+  });
+
+  // Ensure we always respond with JSON, never HTML
+  if (!res.headersSent) {
+    res.status(err?.status || 500).json({
+      error: {
+        message: err?.message || "Internal server error",
+        code: err?.code || "INTERNAL_SERVER_ERROR",
+      },
+    });
+  }
+});
 
 export default app;

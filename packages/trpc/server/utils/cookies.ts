@@ -50,5 +50,5 @@ export function getAuthenticationCookie(ctx: TRPCContext) {
 }
 
 export function clearAuthenticationCookie(ctx: TRPCContext) {
-ctx.clearCookie(AUTHENTICATION_COOKIE_NAME);
+  ctx.clearCookie(AUTHENTICATION_COOKIE_NAME);
 }

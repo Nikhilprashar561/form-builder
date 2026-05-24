@@ -30,3 +30,11 @@ export const signInUserWithEmailAndPasswordInput = z.object({
 export type signInUserWithEmailAndPasswordInputType = z.infer<
   typeof signInUserWithEmailAndPasswordInput
 >;
+
+export const UpdateUserDetailsInput = z.object({
+  fullName: z.string().describe("User fullName"),
+  email: z.email().describe("User email address"),
+  password: z.string().describe("user password"),
+})
+
+export type UpdateUserDetailsInputType = z.infer<typeof UpdateUserDetailsInput>
