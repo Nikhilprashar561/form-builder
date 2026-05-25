@@ -2,20 +2,7 @@
 
 What Data we Accept At What API . Finalize ?
 
-User Side
+Available Public form
 
-Register : FullName, Email, Password Done 
-verifyEmail : OTP Done
-login : Email, Password Done
-logout: user ID 
-Get User : User ID Done 
-forgot : email , otp
-UserUpdate : Fullname, email, avatarUrl, directly overWrite Password, if they change email again OTP Process begain
-
-
-
-
-Form Side 
-
-
-
+1. Get Avaiabable all forms.
+2. Get Expire Forms Completed Forms.

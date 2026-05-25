@@ -96,7 +96,7 @@ export const authRouter = router({
   getLoggedInUserInfo: authenticationProcedure
     .meta({
       openapi: {
-        method: "POST",
+        method: "GET",
         path: getPath("/getLoggedInUserInfo"),
         tags: TAGS,
         protect: true,
@@ -136,7 +136,7 @@ export const authRouter = router({
   updateProfile: authenticationProcedure
     .meta({
       openapi: {
-        method: "POST",
+        method: "PATCH",
         path: getPath("/updateProfile"),
         tags: TAGS,
         protect: true,
@@ -162,7 +162,7 @@ export const authRouter = router({
   deleteAccount: authenticationProcedure
     .meta({
       openapi: {
-        method: "POST",
+        method: "DELETE",
         path: getPath("/deleteAccount"),
         tags: TAGS,
         protect: true,

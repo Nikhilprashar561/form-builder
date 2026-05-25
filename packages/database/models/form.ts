@@ -31,6 +31,7 @@ export const formTable = pgTable(
 
     isPasswordProtected: boolean("is_password_protected").default(false).notNull(),
     passwordHash: text("password_hash"),
+    
     expiresAt: timestamp("expires_at"),
 
     createdAt: timestamp("created_at").defaultNow(),
