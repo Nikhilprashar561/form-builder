@@ -42,38 +42,7 @@ export const getCreatedFormOutput = z.array(
   }),
 );
 
-// #3 Get one Form with it's field
-
-export const getOneSpecificFormInput = z.object({
-  // Get One Specific Form
-  formId: z.string().uuid().describe("UUID of the form"),
-});
-
-export const getOneSpecificFormOutput = z.object({
-  id: z.string().uuid(),
-  title: z.string(),
-  description: z.string().nullable().optional(),
-  slug: z.string(),
-  status: z.enum(["draft", "published", "unpublished", "archived"]),
-  visibilityMode: z.enum(["public", "unlisted"]),
-  isPasswordProtected: z.boolean(),
-  expiresAt: z.coerce.date().nullable().optional(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-  fields: z.array(
-    z.object({
-      id: z.string().uuid(),
-      label: z.string().max(100),
-      labelKey: z.string().max(100),
-      type: z.enum(["TEXT", "NUMBER", "EMAIL", "YES_NO", "PASSWORD"]),
-      placeholder: z.string().nullable().optional(),
-      isRequired: z.boolean(),
-      index: z.string(),
-    }),
-  ),
-});
-
-// #4 Update One Form
+// #3 Update One Form
 
 export const updateCreatedFormInput = z.object({
   // Update Form
@@ -96,7 +65,7 @@ export const updateCreatedFormOutput = z.object({
   formId: z.string().uuid().describe("UUID of the updated form"),
 });
 
-// #5 For Delete Form
+// #4 For Delete Form
 
 export const deleteCreatedFormInput = z.object({
   // Delete
@@ -106,3 +75,36 @@ export const deleteCreatedFormInput = z.object({
 export const deleteCreatedFormOutput = z.object({
   message: z.string().describe("Deletion confirmation message"),
 });
+
+export const getOneSpecificFormWithAllFieldsInput = z.object({
+  formId: z.string().describe('Form id to get form')
+})
+
+export const fieldTypeEnum = z.enum(["TEXT", "NUMBER", "EMAIL", "YES_NO", "PASSWORD"]);
+export const visibilityModeEnum = z.enum(["public", "unlisted"]);
+export const formStatusEnum = z.enum(["draft", "published", "unpublished", "archived"]);
+
+export const formFieldOutputSchema = z.object({
+  id: z.string().uuid(),
+  label: z.string(),
+  labelKey: z.string(),
+  type: fieldTypeEnum,
+  placeholder: z.string().nullable(),
+  isRequired: z.boolean().nullable(),
+  index: z.number(),
+});
+
+export const getOneSpecificFormOutputSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  description: z.string().nullable(),
+  slug: z.string(),
+  status: formStatusEnum,
+  visibilityMode: visibilityModeEnum,
+  isPasswordProtected: z.boolean(),
+  expiresAt: z.date(),
+  createdAt: z.date().nullable(),
+  updatedAt: z.date().nullable(),
+  fields: z.array(formFieldOutputSchema),
+});
+

@@ -15,7 +15,35 @@ import { env } from "../env";
 
 class FormService {
   public async createNewForm(paylaod: CreateNewFormInputType) {
-      const {
+    const {
+      title,
+      description,
+      createdBy,
+      slug,
+      status,
+      visibilityMode,
+      isPasswordProtected,
+      passwordHash,
+      expiresAt,
+    } = await createNewFormInput.parseAsync(paylaod);
+
+    // Store into DB
+    // Check Created or not
+    // if created then return it
+
+    const formUrl = `${env.FRONTEND_URL}/${slug}`;
+
+    const currentDate = new Date();
+    const expireDate = new Date(expiresAt);
+    if (expireDate.getTime() < currentDate.getTime())
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid Expire time",
+      });
+
+    const result = await db
+      .insert(formTable)
+      .values({
         title,
         description,
         createdBy,
@@ -25,43 +53,17 @@ class FormService {
         isPasswordProtected,
         passwordHash,
         expiresAt,
-      } = await createNewFormInput.parseAsync(paylaod);
-
-      // Store into DB
-      // Check Created or not
-      // if created then return it
-
-      const formUrl = `${env.FRONTEND_URL}/${slug}`
-
-      const currentDate = new Date()
-      const expireDate = new Date(expiresAt)
-      if(expireDate.getTime() < currentDate.getTime()) throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: "Invalid Expire time"
+        formLink: formUrl,
       })
+      .returning({ id: formTable.id });
 
-      const result = await db
-        .insert(formTable)
-        .values({
-          title,
-          description,
-          createdBy,
-          slug,
-          status,
-          visibilityMode,
-          isPasswordProtected,
-          passwordHash,
-          expiresAt,
-          formLink: formUrl
-        })
-        .returning({ id: formTable.id });
+    if (result.length === 0 || !result || !result[0]?.id)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Form creation failed",
+      });
 
-        if(result.length === 0 || !result || !result[0]?.id) throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: "Form creation failed"
-        })
-
-        return { id: result[0].id }
+    return { id: result[0].id };
   }
 
   public async getCreatedForms(payload: GetCreatedFormInputType) {
@@ -99,7 +101,7 @@ class FormService {
 
     // Build the update object with only provided fields
     const updateData: Record<string, any> = {};
-    
+
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
     if (slug !== undefined) updateData.slug = slug;
@@ -110,14 +112,14 @@ class FormService {
     if (expiresAt !== undefined) {
       const expireDate = new Date(expiresAt!);
       const currentDate = new Date();
-      
+
       if (expireDate.getTime() < currentDate.getTime()) {
         throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: "Invalid Expire time"
+          code: "BAD_REQUEST",
+          message: "Invalid Expire time",
         });
       }
-      
+
       updateData.expiresAt = expireDate;
     }
 
@@ -129,12 +131,30 @@ class FormService {
 
     if (result.length === 0 || !result[0]?.id) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: "Form not found or update failed"
+        code: "NOT_FOUND",
+        message: "Form not found or update failed",
       });
     }
 
     return { id: result[0].id };
+  }
+
+  public async deleteCreatedForm(payload: GetOneSpecificFormInputType) {
+    const { formId } = await getOneSpecificForm.parseAsync(payload);
+
+    const result = await db
+      .delete(formTable)
+      .where(eq(formTable.id, formId))
+      .returning({ id: formTable.id });
+
+    if (result.length === 0 || !result[0]?.id) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Form not found or deletion failed",
+      });
+    }
+
+    return { message: "Form deleted successfully", id: result[0].id };
   }
 
   public async getOneSpcificForm(payload: GetOneSpecificFormInputType) {
@@ -142,6 +162,7 @@ class FormService {
 
     const rows = await db
       .select({
+        // Form columns
         id: formTable.id,
         title: formTable.title,
         description: formTable.description,
@@ -152,6 +173,7 @@ class FormService {
         expiresAt: formTable.expiresAt,
         createdAt: formTable.createdAt,
         updatedAt: formTable.updatedAt,
+        // Field columns (nullable due to leftJoin)
         field: {
           id: formsFields.id,
           label: formsFields.label,
@@ -167,60 +189,43 @@ class FormService {
       .where(eq(formTable.id, formId))
       .orderBy(asc(formsFields.index));
 
-    if (rows.length === 0)
+    if (rows.length === 0) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Form not found",
       });
-
-    const {
-      id,
-      title,
-      description,
-      slug,
-      status,
-      visibilityMode,
-      isPasswordProtected,
-      expiresAt,
-      createdAt,
-      updatedAt,
-    } = rows[0]!;
-
-    const fields = rows
-      .filter((row) => row.field?.id !== null)
-      .map((row) => row.field as NonNullable<typeof row.field>);
-
-    return {
-      id,
-      title,
-      description,
-      slug,
-      status,
-      visibilityMode,
-      isPasswordProtected,
-      expiresAt,
-      createdAt,
-      updatedAt,
-      fields,
-    };
-  }
-
-  public async deleteCreatedForm(payload: GetOneSpecificFormInputType) {
-    const { formId } = await getOneSpecificForm.parseAsync(payload);
-
-    const result = await db
-      .delete(formTable)
-      .where(eq(formTable.id, formId))
-      .returning({ id: formTable.id });
-
-    if (result.length === 0 || !result[0]?.id) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: "Form not found or deletion failed"
-      });
     }
 
-    return { message: "Form deleted successfully", id: result[0].id };
+    const firstRow = rows[0]!;
+
+    const fields = rows
+      .filter(
+        (row): row is typeof row & { field: NonNullable<typeof row.field> } =>
+          row.field?.id != null,
+      )
+      .map((row) => ({
+        id: row.field.id,
+        label: row.field.label,
+        labelKey: row.field.labelKey,
+        type: row.field.type,
+        placeholder: row.field.placeholder,
+        isRequired: row.field.isRequired,
+        index: Number(row.field.index),
+      }));
+
+    return {
+      id: firstRow.id,
+      title: firstRow.title,
+      description: firstRow.description ?? null,
+      slug: firstRow.slug,
+      status: firstRow.status,
+      visibilityMode: firstRow.visibilityMode,
+      isPasswordProtected: firstRow.isPasswordProtected,
+      expiresAt: firstRow.expiresAt,
+      createdAt: firstRow.createdAt ?? null,
+      updatedAt: firstRow.updatedAt ?? null,
+      fields,
+    };
   }
 }
 

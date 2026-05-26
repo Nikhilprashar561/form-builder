@@ -8,8 +8,8 @@ import {
   deleteCreatedFormInput,
   deleteCreatedFormOutput,
   getCreatedFormOutput,
-  getOneSpecificFormInput,
-  getOneSpecificFormOutput,
+  getOneSpecificFormOutputSchema,
+  getOneSpecificFormWithAllFieldsInput,
   updateCreatedFormInput,
   updateCreatedFormOutput,
 } from "./model";
@@ -84,21 +84,6 @@ export const formRouter = router({
       }));
     }),
 
-  getOneSpecificForm: publicProcedure
-    .meta({
-      openapi: {
-        method: "GET",
-        path: getPath("/getOneForm"),
-        tags: TAGS,
-      },
-    })
-    .input(getOneSpecificFormInput)
-    .output(getOneSpecificFormOutput)
-    .query(async ({ input }) => {
-      const { formId } = input;
-      return await formService.getOneSpcificForm({ formId });
-    }),
-
   updateCreatedForm: authenticationProcedure
     .meta({
       openapi: {
@@ -136,5 +121,23 @@ export const formRouter = router({
       return {
         message,
       };
+    }),
+
+  getOneSpecificFormWithAllFields: publicProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: getPath("/getFormWithFields"),
+        tags: TAGS,
+        protect: false,
+      },
+    })
+    .input(getOneSpecificFormWithAllFieldsInput)
+    .output(getOneSpecificFormOutputSchema)
+    .query(async ({ input }) => {
+      const { formId } = input;
+      const formWithFields = await formService.getOneSpcificForm({ formId });
+
+      return formWithFields;
     }),
 });

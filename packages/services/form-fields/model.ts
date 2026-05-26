@@ -4,11 +4,11 @@ const fieldTypeEnum = z.enum(["text", "textarea", "select", "checkbox", "radio"]
 
 export const createNewFormFieldInput = z.object({
     label: z.string().describe("Field label"),
-    placeholder: z.string().optional().describe("Field placeholder"),
-    isRequired: z.boolean().default(false).describe("Is field required"),
+    placeholder: z.string().optional().describe("Field placeholder").nullable(),
+    isRequired: z.boolean().describe("Is field required"),
     type: fieldTypeEnum.describe("Field type"),
     formId: z.string().uuid().describe("UUID of the form"),
-    order: z.number().optional().describe('Field Order number')
+    order: z.number().describe('Field Order number')
 })
 
 
