@@ -34,10 +34,8 @@ export const GlobalProviders: React.FC<{ children: React.ReactNode }> = ({ child
         disableTransitionOnChange
       >
         <trpc.Provider queryClient={queryClient} client={trpcClient}>
-        <Navbar />
         <Toaster position="top-right" expand={true}/>
           {children}
-         <Footer /> 
         </trpc.Provider>
       </NextThemesProvider>
     </QueryClientProvider>

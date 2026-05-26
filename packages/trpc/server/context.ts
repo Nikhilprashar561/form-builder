@@ -1,12 +1,16 @@
-import type { CreateExpressContextOptions } from "@trpc/server/adapters/express"; // C
+import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { createCookiesFactory, getCookieFactory, clearCookieFactory } from "./utils/cookies";
 
+export interface TRPCCtxUser {
+  id: string
+}
+
 export interface TRPCContext {
-  createCookie: ReturnType<typeof createCookiesFactory>;
+  cerateCookie: ReturnType<typeof createCookiesFactory>;
   getCookie: ReturnType<typeof getCookieFactory>;
   clearCookie: ReturnType<typeof clearCookieFactory>;
 
-  user?: string
+  user?: TRPCCtxUser
 }
 
 export async function createContext({
@@ -15,7 +19,7 @@ export async function createContext({
 }: CreateExpressContextOptions): Promise<TRPCContext> {
 
     const ctx: TRPCContext = {
-        createCookie: createCookiesFactory(res),
+        cerateCookie: createCookiesFactory(res),
         getCookie: getCookieFactory(req),
         clearCookie: clearCookieFactory(res),
         user: undefined

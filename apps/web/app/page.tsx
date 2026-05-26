@@ -1,11 +1,18 @@
-// import { api } from "~/trpc/server";
-
-// import NexFormLanding from "~/components/Landing";
+import NexFormLanding from "~/components/Landing";
+import Navbar from "~/components/Navbar";
+import Footer from "~/components/Footer";
 
 export default async function Home() {
   return (
-    <main className="min-h-screen min-w-screen flex justify-center items-center">
-      {/* <NexFormLanding /> */}
-    </main>
+    <div className="w-full min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1">
+        <NexFormLanding />
+        {/* <LandingPage /> */}
+      </main>
+      <Footer />
+    </div>
   );
 }
+
+// c:\Users\nikhi\.gemini\antigravity\scratch\form-builder\apps\web\components\Landing.tsx

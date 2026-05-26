@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  JWT_SECRET: z.string().describe('Secret Key for JWT Tokens')
+  JWT_SECRET: z.string().describe('Secret Key for JWT Tokens'),
+  FRONTEND_URL: z.string().describe('Frontend url where it host')
 });
 
 function createEnv(env: NodeJS.ProcessEnv) {

@@ -6,7 +6,7 @@ export const createNewFormFieldInput = z.object({ // Create Accessible form fiel
   isRequired: z.boolean().default(false).describe("Is field required"),
   type: z.enum(["text", "textarea", "select", "checkbox", "radio"]).describe("Field type"),
   formId: z.string().uuid().describe("UUID of the form"),
-  order: z.number().optional().describe("Field Order number"),
+  order: z.number().optional().describe("Field Order number").nullable(),
 });
 
 export const createNewFormFieldOutput = z.object({ // Create Accessible form field output validation schema

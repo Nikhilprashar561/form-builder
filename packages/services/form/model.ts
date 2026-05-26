@@ -12,7 +12,7 @@ export const createNewFormInput = z.object({
   visibilityMode: formVisibility.describe("Form Visibility"),
   isPasswordProtected: boolean().describe("Password Protected form"),
   passwordHash: z.string().optional().describe("Form password"),
-  expiresAt: z.string().describe("Form Expire time"),
+  expiresAt: z.coerce.date().describe("Form Expire time"),
 });
 
 export type CreateNewFormInputType = z.infer<typeof createNewFormInput>;
@@ -38,7 +38,7 @@ export const updateCreatedFormInput = z.object({
   visibilityMode: formVisibility.optional().describe("Form Visibility"),
   isPasswordProtected: boolean().optional().describe("Password Protected form"),
   passwordHash: z.string().optional().describe("Form password"),
-  expiresAt: z.string().optional().describe("Form Expire time"),
+  expiresAt: z.coerce.date().describe("Form Expire time").nullable().optional(),
 });
 
 export type UpdateCreatedFormInputType = z.infer<typeof updateCreatedFormInput>;

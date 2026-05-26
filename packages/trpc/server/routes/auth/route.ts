@@ -105,7 +105,7 @@ export const authRouter = router({
     .input(getLoggedInUserInfoInputModel)
     .output(getLoggedInUserInfoOutput)
     .query(async ({ ctx }) => {
-      const { id, email, fullName, profilImageUrl } = await userService.getUserInfoById(ctx.user);
+      const { id, email, fullName, profilImageUrl } = await userService.getUserInfoById(ctx.user.id);
 
       return {
         id,
@@ -145,7 +145,7 @@ export const authRouter = router({
     .input(updateProfileInputModel)
     .output(updateProfileOutputModel)
     .mutation(async ({ input, ctx }) => {
-      const { email, fullName, id, message } = await userService.updateProfile(ctx.user, {
+      const { email, fullName, id, message } = await userService.updateProfile(ctx.user.id, {
         fullName: input.fullName,
         email: input.email,
         password: input.password!,
@@ -171,7 +171,7 @@ export const authRouter = router({
     .input(z.undefined())
     .output(deleteAccountOutputModel)
     .mutation(async ({ ctx }) => {
-      const result = await userService.deleteAccount(ctx.user);
+      const result = await userService.deleteAccount(ctx.user.id);
       clearAuthenticationCookie(ctx);
       return result;
     }),

@@ -24,7 +24,7 @@ export const formTable = pgTable(
     createdBy: uuid("created_by").references(() => usersTable.id),
 
     slug: text("slug").notNull().unique(), // Custom shareable form links
-    formLink: varchar("form_link", { length: 100 }).notNull(),
+    formLink: varchar("form_link", { length: 100 }),
     
     status: statusEnum("status").default("draft").notNull(),
     visibilityMode: visibilityEnum("visibility_mode").default("unlisted").notNull(),
@@ -32,7 +32,7 @@ export const formTable = pgTable(
     isPasswordProtected: boolean("is_password_protected").default(false).notNull(),
     passwordHash: text("password_hash"),
     
-    expiresAt: timestamp("expires_at"),
+    expiresAt: timestamp("expires_at").notNull(),
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
