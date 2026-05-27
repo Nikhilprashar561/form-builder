@@ -101,7 +101,7 @@ export default function SubmissionsPage() {
 
           {/* Header */}
           <div className="mb-8 fade-up">
-            <Link href={`/forms/${formId}/edit`} className="scribble-btn-outline mb-6 inline-flex">
+            <Link href={`/dashboard/form/${formId}/edit`} className="scribble-btn-outline mb-6 inline-flex">
               <ArrowLeft className="h-4 w-4" /> Back to Editor
             </Link>
 

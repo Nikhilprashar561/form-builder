@@ -38,9 +38,9 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Create Form", href: "/dashboard/form", icon: FileText },
   { label: "Analytics", href: "/dashboard/analytics", icon: LineChart },
-  { label: "Explore", href: "/explore", icon: Compass },
-  { label: "Branding", href: "/branding", icon: Palette },
-  { label: "Archive", href: "/archive", icon: Archive },
+  { label: "Explore", href: "/", icon: Compass },
+  // { label: "Branding", href: "/branding", icon: Palette },
+  // { label: "Archive", href: "/archive", icon: Archive },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

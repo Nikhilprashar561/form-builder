@@ -94,7 +94,7 @@ export default function CreateFormPage() {
       });
 
       toast.success("Form created! Now add your fields.");
-      router.push(`/forms/${id}/edit`);
+      router.push(`/dashboard/form/${id}/edit`);
     } catch (err: any) {
       toast.error(err?.shape?.message || "Failed to create form");
     } finally {

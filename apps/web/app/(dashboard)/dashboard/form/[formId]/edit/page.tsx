@@ -416,7 +416,7 @@ export default function FormEditPage() {
 
           {/* Bottom actions */}
           <div className="mt-8 pt-6 flex gap-3 justify-between" style={{ borderTop: "2px dashed #ddd" }}>
-            <Link href={`/forms/${formId}/submissions`} className="scribble-btn-outline">
+            <Link href={`/dashboard/form/${formId}/submissions`} className="scribble-btn-outline">
               <BarChart4 className="h-4 w-4" /> View Submissions
             </Link>
             <Link href="/dashboard" className="scribble-btn-solid">

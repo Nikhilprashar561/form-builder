@@ -286,10 +286,10 @@ export default function AnalyticsPage() {
               <Link href="/dashboard" className="scribble-btn-outline">
                 <ArrowLeft className="h-4 w-4" /> Dashboard
               </Link>
-              <Link href={`/forms/${formId}/edit`} className="scribble-btn-outline">
+              <Link href={`/dashboard/form/${formId}/edit`} className="scribble-btn-outline">
                 ✏️ Edit Fields
               </Link>
-              <Link href={`/forms/${formId}/submissions`} className="scribble-btn-outline">
+              <Link href={`/dashboard/form/${formId}/submissions`} className="scribble-btn-outline">
                 <Users className="h-4 w-4" /> Submissions
               </Link>
               {safeSubmissions.length > 0 && (
@@ -491,7 +491,7 @@ export default function AnalyticsPage() {
                       </h2>
                       <p style={{ fontFamily: "'Caveat', cursive", fontSize: "13px", color: "#aaa" }}>Latest 5 entries</p>
                     </div>
-                    <Link href={`/forms/${formId}/submissions`} className="scribble-btn-outline" style={{ fontSize: "14px", padding: "5px 14px" }}>
+                    <Link href={`/dashboard/form/${formId}/submissions`} className="scribble-btn-outline" style={{ fontSize: "14px", padding: "5px 14px" }}>
                       View All →
                     </Link>
                   </div>
@@ -557,7 +557,7 @@ export default function AnalyticsPage() {
                   <p style={{ fontFamily: "'Caveat', cursive", fontSize: "15px", color: "#aaa", marginBottom: "24px" }}>
                     Analytics will appear here once your form receives submissions
                   </p>
-                  <Link href={`/forms/${formId}/edit`} className="scribble-btn-outline">
+                  <Link href={`/dashboard/form/${formId}/edit`} className="scribble-btn-outline">
                     ✏️ Edit Form Fields
                   </Link>
                 </div>

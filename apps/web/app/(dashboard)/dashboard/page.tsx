@@ -122,7 +122,7 @@ export default function DashboardPage() {
       setIsCreateModalOpen(false);
       setNewTitle("");
       setNewDescription("");
-      router.push(`/forms/${id}/edit`);
+      router.push(`/dashboard/form/${id}/edit`);
     } catch (err: any) {
       toast.error(err?.shape?.message || "Failed to create form");
     } finally {
@@ -368,7 +368,7 @@ export default function DashboardPage() {
                           {form.visibilityMode}
                         </span>
                       </div>
-                      <Link href={`/forms/${form.id}/edit`} className="form-card-title block">
+                      <Link href={`/dashboard/form/${form.id}/edit`} className="form-card-title block">
                         {form.title}
                       </Link>
                       {form.description && (
@@ -383,17 +383,17 @@ export default function DashboardPage() {
 
                     {/* Slug */}
                     <div className="py-2 px-3" style={{ background: "#f9f8f5", border: "1.5px dashed #ddd", fontFamily: "'Caveat', cursive", fontSize: "13px", color: "#888" }}>
-                      /forms/{form.slug}
+                      /public-forms/{form.slug}
                     </div>
 
                     {/* Controls */}
                     <div className="flex items-center justify-between">
                       <div className="flex gap-2">
-                        <Link href={`/forms/${form.id}/edit`} className="scribble-btn-outline">
+                        <Link href={`/dashboard/form/${form.id}/edit`} className="scribble-btn-outline">
                           <Pencil className="h-3.5 w-3.5" />
                           Edit Fields
                         </Link>
-                        <Link href={`/forms/${form.id}/submissions`} className="scribble-btn-outline">
+                        <Link href={`/dashboard/form/${form.id}/submissions`} className="scribble-btn-outline">
                           <BarChart4 className="h-3.5 w-3.5" />
                           Submissions
                         </Link>
@@ -402,7 +402,7 @@ export default function DashboardPage() {
                         <button onClick={() => handleCopyLink(form.slug)} className="icon-btn" title="Copy link">
                           {copiedId === form.slug ? <Check className="h-4 w-4" style={{ color: "black" }} /> : <Copy className="h-4 w-4" />}
                         </button>
-                        <Link href={`/forms/${form.slug}`} target="_blank" className="icon-btn" title="View live form">
+                        <Link href={`/public-forms/${form.slug}`} target="_blank" className="icon-btn" title="View live form">
                           <ExternalLink className="h-4 w-4" />
                         </Link>
                         <button
