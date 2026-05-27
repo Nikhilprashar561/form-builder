@@ -1,9 +1,5 @@
 import { trpc } from "~/trpc/client";
 
-/**
- * Hook for user registration with email and password
- * Automatically invalidates user info cache on successful signup
- */
 export const useSignUp = () => {
   const utils = trpc.useUtils();
 
@@ -44,7 +40,7 @@ export const useEmailOtp = () => {
     failureCount,
   } = trpc.auth.verifyEmailOtpUser.useMutation({
     onSuccess: async () => {
-      await utils.auth.verifyEmailOtpUser;
+      await utils.auth.getLoggedInUserInfo.invalidate();
     },
   });
 
@@ -58,10 +54,6 @@ export const useEmailOtp = () => {
   };
 };
 
-/**
- * Hook for user sign-in with email and password
- * Authenticates user and stores session
- */
 export const useSignIn = () => {
   const utils = trpc.useUtils();
 
@@ -95,7 +87,10 @@ export const useUser = () => {
     isFetched,
     isLoading,
     status,
-  } = trpc.auth.getLoggedInUserInfo.useQuery();
+  } = trpc.auth.getLoggedInUserInfo.useQuery(undefined, {
+    staleTime: 0,
+    retry: false,
+  });
 
   return {
     user,
@@ -106,10 +101,6 @@ export const useUser = () => {
   };
 };
 
-/**
- * Hook for user sign-out
- * Clears user session and invalidates cache
- */
 export const useSignOut = () => {
   const utils = trpc.useUtils();
 
@@ -130,10 +121,6 @@ export const useSignOut = () => {
   };
 };
 
-/**
- * Hook for updating user profile
- * Mutates user profile information
- */
 export const useUpdateProfile = () => {
   const utils = trpc.useUtils();
 
@@ -154,10 +141,6 @@ export const useUpdateProfile = () => {
   };
 };
 
-/**
- * Hook for deleting user account
- * Permanently deletes user and all associated data
- */
 export const useDeleteAccount = () => {
   const utils = trpc.useUtils();
 

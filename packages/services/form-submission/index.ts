@@ -1,5 +1,10 @@
 import db, { desc, eq } from "@repo/database";
-import { getSubmitFormInput, GetSubmitFormInputType, submitFormInput, SubmitFormInputType } from "./model";
+import {
+  getSubmitFormInput,
+  GetSubmitFormInputType,
+  submitFormInput,
+  SubmitFormInputType,
+} from "./model";
 import { formSubmission } from "@repo/database/schema";
 import { TRPCError } from "@trpc/server";
 
@@ -19,20 +24,29 @@ class FormSubmission {
       });
     }
 
-    return { id: result[0].id };
+    return {
+      message: "Form submitted successfully",
+      submissionId: result[0].id,
+    };
   }
 
   public async getFormSubmissions(payload: GetSubmitFormInputType) {
     const { formId } = await getSubmitFormInput.parseAsync(payload);
 
-    return await db
+    const result = await db
       .select({
         id: formSubmission.id,
         values: formSubmission.values,
         createdAt: formSubmission.createdAt,
       })
       .from(formSubmission)
-      .where(eq(formSubmission.formId, formId)).orderBy(desc(formSubmission.createdAt));
+      .where(eq(formSubmission.formId, formId))
+      .orderBy(desc(formSubmission.createdAt));
+
+    return result.map((row) => ({
+      ...row,
+      createdAt: row.createdAt?.toISOString() ?? "",
+    }));
   }
 }
 

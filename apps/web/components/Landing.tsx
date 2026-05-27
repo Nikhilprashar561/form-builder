@@ -1,409 +1,608 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Layers, 
-  Eye, 
-  Share2, 
-  Shield, 
-  Sliders, 
-  Check, 
-  ChevronRight, 
+import {
+  ArrowRight,
+  Layers,
+  Eye,
+  Shield,
+  Sliders,
+  Check,
+  ChevronRight,
   Command,
-  HelpCircle,
   FileCode,
-  Gauge
+  Gauge,
 } from "lucide-react";
+
+// ── Scribble SVG decorations ──────────────────────────────────────────────────
+
+const ScribbleUnderline = ({ color = "black" }: { color?: string }) => (
+  <svg viewBox="0 0 300 12" className="w-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 8 C50 3, 100 11, 150 6 C200 1, 250 9, 298 5" stroke={color} strokeWidth="2.5" strokeLinecap="round" fill="none" />
+  </svg>
+);
+
+const StarDoodle = ({ className, color = "black" }: { className?: string; color?: string }) => (
+  <svg viewBox="0 0 24 24" className={`inline-block ${className}`} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2 L13.5 9 L20 9 L14.5 13.5 L16.5 20.5 L12 16.5 L7.5 20.5 L9.5 13.5 L4 9 L10.5 9 Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round" fill="none" />
+  </svg>
+);
+
+const DiamondDoodle = ({ color = "black", className = "" }: { color?: string; className?: string }) => (
+  <svg viewBox="0 0 12 12" className={`w-2.5 h-2.5 inline-block ${className}`} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 1 L11 6 L6 11 L1 6 Z" stroke={color} strokeWidth="1.2" fill="none" />
+  </svg>
+);
+
+const CornerScribble = ({ color = "black" }: { color?: string }) => (
+  <svg viewBox="0 0 80 80" className="absolute -top-4 -right-4 w-14 h-14 opacity-20 pointer-events-none" fill="none">
+    <path d="M10 70 Q40 10 70 10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" />
+    <path d="M20 75 Q50 30 75 20" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 4" />
+    <circle cx="70" cy="10" r="3" fill={color} />
+  </svg>
+);
+
 export default function NexFormLanding() {
-  // State for interactive form demo on landing page
   const [demoStep, setDemoStep] = useState(0);
-  const [demoAnswers, setDemoAnswers] = useState({
-    name: "",
-    role: "",
-    rating: 5,
-  });
+  const [demoAnswers, setDemoAnswers] = useState({ name: "", role: "", rating: 0 });
+
   const demoQuestions = [
-    {
-      id: "name",
-      question: "What's your name?",
-      placeholder: "e.g. Satoshi Nakamoto",
-      type: "text",
-    },
-    {
-      id: "role",
-      question: "What is your main objective?",
-      type: "select",
-      options: ["Build customer surveys", "Lead generation", "Collect feedback", "Just playing around"],
-    },
-    {
-      id: "rating",
-      question: "How would you rate this design?",
-      type: "rating",
-    }
+    { id: "name", question: "What's your name?", placeholder: "e.g. Satoshi Nakamoto", type: "text" },
+    { id: "role", question: "What is your main objective?", type: "select", options: ["Build customer surveys", "Lead generation", "Collect feedback", "Just playing around"] },
+    { id: "rating", question: "How would you rate this design?", type: "rating" },
   ];
-  const handleDemoAnswer = (key: string, value: any) => {
+
+  const handleDemoAnswer = (key: string, value: string | number) => {
     setDemoAnswers({ ...demoAnswers, [key]: value });
-    if (demoStep < demoQuestions.length - 1) {
-      setTimeout(() => setDemoStep(demoStep + 1), 300);
-    } else {
-      setTimeout(() => setDemoStep(demoStep + 1), 400);
-    }
+    setTimeout(() => setDemoStep(s => s + 1), demoStep < demoQuestions.length - 1 ? 300 : 400);
   };
+
   const resetDemo = () => {
-    setDemoAnswers({ name: "", role: "", rating: 5 });
+    setDemoAnswers({ name: "", role: "", rating: 0 });
     setDemoStep(0);
   };
+
+  const features = [
+    { icon: <Sliders className="h-5 w-5" />, title: "Dynamic Form Builder", desc: "Visual block editor with text, numbers, dropdowns, ratings, dates, and validation rules. Generate schemas dynamically." },
+    { icon: <Eye className="h-5 w-5" />, title: "Public vs Unlisted Forms", desc: "Public forms appear in the explore gallery. Unlisted forms are hidden and only accessible via a direct link." },
+    { icon: <Gauge className="h-5 w-5" />, title: "Response Analytics", desc: "Track completion metrics, drop-offs, and inspect responses directly from your dashboard with one-click CSV exports." },
+    { icon: <FileCode className="h-5 w-5" />, title: "Type-Safe & Seeded Stack", desc: "Powered by Next.js, tRPC, Zod, and Drizzle ORM. Seeded with demo templates for anime, events, and gaming surveys." },
+    { icon: <Command className="h-5 w-5" />, title: "Scalar API Documentation", desc: "Expose dynamic tRPC operations inside a beautiful, structured Scalar API explorer sandbox out of the box." },
+    { icon: <Shield className="h-5 w-5" />, title: "Spam Protection", desc: "Built-in rate limiting and submission security keeping public form links clean without requiring login." },
+  ];
+
   return (
-    <div className="relative w-full bg-white text-black overflow-hidden font-sans pt-16">
-      {/* Dynamic Background Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-      {/* Hero Section */}
-      <section className="relative max-w-7xl mx-auto px-6 pt-20 pb-16 flex flex-col lg:flex-row items-center justify-between gap-12">
-        <div className="flex-1 space-y-6 text-left max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 bg-zinc-50 text-xs font-medium text-zinc-600 animate-fade-in">
-            <Sparkles className="h-3.5 w-3.5 text-black" />
-            <span>Next-gen Form Builder SaaS</span>
-          </div>
-          <h1 className="font-display text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] text-black">
-            Forms built for the <span className="underline decoration-2 underline-offset-8">modern era</span>.
-          </h1>
-          <p className="text-zinc-500 text-lg sm:text-xl font-light leading-relaxed">
-            Create high-converting, Typeform-style forms in minutes. Set schemas, configure validation rules, and share public or unlisted links. Built for developer productivity.
-          </p>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
-            <Link 
-              href="/sign-up"
-              className="group flex items-center justify-center gap-2 bg-black text-white px-8 py-4 rounded-lg font-medium text-base transition-all duration-300 hover:bg-zinc-800 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black"
-            >
-              Start Building Free 
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="/dashboard"
-              className="flex items-center justify-center bg-white text-black border border-zinc-200 hover:border-black px-8 py-4 rounded-lg font-medium text-base transition-all duration-300"
-            >
-              Explore Demo Dashboard
-            </Link>
-          </div>
-          {/* Seeded Data Banner */}
-          <div className="flex items-center gap-6 pt-6 border-t border-zinc-100 text-xs text-zinc-400">
-            <div className="flex -space-x-2">
-              <span className="w-6 h-6 rounded-full bg-zinc-200 border-2 border-white flex items-center justify-center font-bold text-[8px] text-zinc-600">OS</span>
-              <span className="w-6 h-6 rounded-full bg-zinc-300 border-2 border-white flex items-center justify-center font-bold text-[8px] text-zinc-700">AN</span>
-              <span className="w-6 h-6 rounded-full bg-zinc-400 border-2 border-white flex items-center justify-center font-bold text-[8px] text-white">GM</span>
-            </div>
-            <p>Seeded with themes for <strong>Anime, Games, Events</strong> and more.</p>
-          </div>
-        </div>
-        {/* Live Mockup Widget */}
-        <div className="flex-1 w-full max-w-md lg:max-w-lg">
-          <div className="relative rounded-2xl border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:scale-[1.01]">
-            {/* Header bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b-2 border-black">
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-zinc-100 border border-black" />
-                <span className="w-3.5 h-3.5 rounded-full bg-zinc-100 border border-black" />
-                <span className="w-3.5 h-3.5 rounded-full bg-zinc-100 border border-black" />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+        .land-noise-bg {
+          background-color: #f9f8f5;
+          background-image:
+            linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+          background-size: 28px 28px;
+        }
+        .dark-grid-bg {
+          background-color: #0d0d0d;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+          background-size: 28px 28px;
+        }
+
+        .hero-badge {
+          font-family: 'Caveat', cursive;
+          font-size: 14px;
+          font-weight: 600;
+          border: 2px solid black;
+          background: white;
+          padding: 5px 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          box-shadow: 2px 2px 0 black;
+        }
+
+        .scribble-btn-solid {
+          font-family: 'Caveat', cursive;
+          font-size: 18px;
+          font-weight: 700;
+          border: 2.5px solid black;
+          background: black;
+          color: white;
+          padding: 12px 28px;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 4px 4px 0px #555;
+        }
+        .scribble-btn-solid:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #333; }
+        .scribble-btn-solid:active { transform: translate(1px,1px); }
+
+        .scribble-btn-outline {
+          font-family: 'Caveat', cursive;
+          font-size: 18px;
+          font-weight: 700;
+          border: 2.5px solid black;
+          background: white;
+          color: black;
+          padding: 12px 28px;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 4px 4px 0px black;
+        }
+        .scribble-btn-outline:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 black; }
+
+        .scribble-btn-outline-white {
+          font-family: 'Caveat', cursive;
+          font-size: 18px;
+          font-weight: 700;
+          border: 2.5px solid white;
+          background: transparent;
+          color: white;
+          padding: 12px 28px;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          transition: transform 0.1s, box-shadow 0.1s;
+          box-shadow: 4px 4px 0px rgba(255,255,255,0.3);
+        }
+        .scribble-btn-outline-white:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(255,255,255,0.5); }
+
+        .demo-card {
+          border: 2.5px solid black;
+          box-shadow: 8px 8px 0px black;
+          background: white;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .demo-card:hover { transform: translate(-2px,-2px); box-shadow: 10px 10px 0 black; }
+
+        .demo-input {
+          font-family: 'Caveat', cursive;
+          font-size: 18px;
+          border: none;
+          border-bottom: 2px solid black;
+          background: transparent;
+          outline: none;
+          width: 100%;
+          padding: 6px 0;
+          color: black;
+          transition: border-color 0.15s;
+        }
+        .demo-input:focus { border-bottom: 2.5px solid black; }
+        .demo-input::placeholder { color: #ccc; }
+
+        .demo-option {
+          font-family: 'Caveat', cursive;
+          font-size: 16px;
+          font-weight: 600;
+          width: 100%;
+          text-align: left;
+          background: white;
+          border: 2px solid black;
+          padding: 10px 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+          box-shadow: 2px 2px 0 black;
+        }
+        .demo-option:hover { background: black; color: white; transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #333; }
+
+        .rating-btn {
+          font-family: 'Instrument Serif', serif;
+          font-size: 18px;
+          border: 2px solid black;
+          background: white;
+          width: 46px;
+          height: 46px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
+          box-shadow: 2px 2px 0 black;
+        }
+        .rating-btn:hover { background: black; color: white; transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #333; }
+
+        .feature-card {
+          border: 2.5px solid black;
+          background: white;
+          padding: 28px;
+          position: relative;
+          transition: transform 0.15s, box-shadow 0.15s;
+          box-shadow: 4px 4px 0 black;
+        }
+        .feature-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 black; }
+
+        .feature-icon {
+          width: 44px;
+          height: 44px;
+          border: 2px solid black;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: white;
+          transition: background 0.15s, color 0.15s;
+          margin-bottom: 16px;
+        }
+        .feature-card:hover .feature-icon { background: black; color: white; }
+
+        .pricing-card {
+          border: 2.5px solid black;
+          background: white;
+          padding: 32px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 28px;
+          position: relative;
+          transition: transform 0.15s, box-shadow 0.15s;
+          box-shadow: 5px 5px 0 black;
+        }
+        .pricing-card:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 black; }
+        .pricing-card.featured { background: black; color: white; }
+        .pricing-card.featured .check-icon { filter: invert(1); }
+
+        .plan-badge {
+          font-family: 'Caveat', cursive;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          padding: 4px 12px;
+          border: 1.5px solid currentColor;
+          display: inline-block;
+          margin-bottom: 10px;
+        }
+
+        .price-num {
+          font-family: 'Instrument Serif', serif;
+          font-size: 52px;
+          font-weight: 400;
+          line-height: 1;
+        }
+
+        .check-row {
+          font-family: 'Caveat', cursive;
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .section-eyebrow {
+          font-family: 'Caveat', cursive;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 12px;
+        }
+
+        .kbd-hint {
+          font-family: 'Caveat', cursive;
+          font-size: 12px;
+          border: 1.5px solid #ddd;
+          padding: 2px 8px;
+          color: #aaa;
+          display: inline-block;
+        }
+
+        .progress-scribble {
+          height: 6px;
+          border: 1.5px solid black;
+          background: white;
+          overflow: hidden;
+        }
+        .progress-fill {
+          height: 100%;
+          background: black;
+          transition: width 0.4s ease;
+        }
+
+        .fade-up { animation: fadeUp 0.55s ease forwards; opacity: 0; }
+        .fade-up-1 { animation-delay: 0.1s; }
+        .fade-up-2 { animation-delay: 0.2s; }
+        .fade-up-3 { animation-delay: 0.3s; }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="relative w-full text-black overflow-hidden pt-16">
+
+        {/* ── Hero ── */}
+        <section className="land-noise-bg relative">
+          <div className="max-w-7xl mx-auto px-6 pt-20 pb-24 flex flex-col lg:flex-row items-center justify-between gap-14">
+
+            {/* Left copy */}
+            <div className="flex-1 space-y-7 text-left max-w-2xl fade-up">
+              <div className="hero-badge">
+                <StarDoodle className="w-4 h-4" />
+                Next-gen Form Builder SaaS
               </div>
-              <span className="font-mono text-xs text-zinc-400">demo-form.nexform.io</span>
-              <span className="w-6" />
-            </div>
-            {/* Form body */}
-            <div className="p-8 min-h-[300px] flex flex-col justify-between">
-              {demoStep < demoQuestions.length ? (
-                <div className="space-y-6 transition-all duration-300">
-                  <div className="flex items-start gap-3">
-                    <span className="font-mono text-zinc-400 font-bold">0{demoStep + 1} ➔</span>
-                    <h3 className="text-xl font-bold text-black">
-                      {demoQuestions[demoStep].question}
-                    </h3>
-                  </div>
-                  {/* Text Input */}
-                  {demoQuestions[demoStep].type === "text" && (
-                    <div className="pl-8">
-                      <input 
-                        type="text" 
-                        placeholder={demoQuestions[demoStep].placeholder}
-                        value={demoAnswers.name}
-                        onChange={(e) => setDemoAnswers({ ...demoAnswers, name: e.target.value })}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && demoAnswers.name.trim()) {
-                            handleDemoAnswer("name", demoAnswers.name);
-                          }
-                        }}
-                        className="w-full border-b border-black py-2 focus:border-b-2 focus:outline-none font-sans text-lg text-black placeholder:text-zinc-300"
-                        autoFocus
-                      />
-                      <div className="mt-3 flex items-center gap-2 text-zinc-400 text-xs">
-                        <span className="border border-zinc-200 px-1.5 py-0.5 rounded font-mono text-[9px]">ENTER</span>
-                        <span>to proceed</span>
-                      </div>
+
+              <div>
+                <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "clamp(42px,6vw,72px)", lineHeight: 1.05, fontWeight: 400 }}>
+                  Forms built for the<br /><em>modern era</em>.
+                </h1>
+                <ScribbleUnderline />
+              </div>
+
+              <p style={{ fontFamily: "'Caveat', cursive", fontSize: "18px", color: "#666", lineHeight: 1.6 }}>
+                Create high-converting, Typeform-style forms in minutes. Set schemas, configure validation rules, and share public or unlisted links. Built for developer productivity.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/sign-up" className="scribble-btn-solid">
+                  Start Building Free <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/dashboard" className="scribble-btn-outline">
+                  Explore Demo
+                </Link>
+              </div>
+
+              {/* Social proof */}
+              <div className="flex items-center gap-5 pt-4" style={{ borderTop: "1.5px dashed #ddd" }}>
+                <div className="flex -space-x-1.5">
+                  {["OS", "AN", "GM"].map((i, idx) => (
+                    <div key={idx} style={{ width: 28, height: 28, border: "2px solid black", background: idx === 2 ? "black" : "white", color: idx === 2 ? "white" : "black", fontFamily: "'Caveat', cursive", fontSize: "11px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {i}
                     </div>
-                  )}
-                  {/* Select Input */}
-                  {demoQuestions[demoStep].type === "select" && (
-                    <div className="pl-8 space-y-2">
-                      {demoQuestions[demoStep].options?.map((option, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => handleDemoAnswer("role", option)}
-                          className="w-full text-left px-4 py-3 border border-zinc-200 hover:border-black rounded-lg transition-all duration-200 font-medium text-sm flex items-center justify-between group"
-                        >
-                          <span>{option}</span>
-                          <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {/* Rating Input */}
-                  {demoQuestions[demoStep].type === "rating" && (
-                    <div className="pl-8 space-y-4">
-                      <div className="flex gap-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => handleDemoAnswer("rating", star)}
-                            className="p-2 border border-zinc-200 hover:border-black rounded-md transition-all duration-200 font-mono text-sm hover:scale-105"
-                          >
-                            {star}★
-                          </button>
-                        ))}
-                      </div>
-                      <p className="text-xs text-zinc-400">Click a number to submit</p>
-                    </div>
-                  )}
+                  ))}
                 </div>
-              ) : (
-                <div className="space-y-6 text-center py-8 animate-fade-in">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-black bg-zinc-50 mb-2">
-                    <Check className="h-6 w-6 text-black" />
+                <p style={{ fontFamily: "'Caveat', cursive", fontSize: "15px", color: "#888" }}>
+                  Seeded with themes for <strong style={{ color: "black" }}>Anime, Games, Events</strong> and more ✦
+                </p>
+              </div>
+            </div>
+
+            {/* Demo widget */}
+            <div className="flex-1 w-full max-w-md lg:max-w-lg fade-up fade-up-1">
+              <div className="demo-card">
+                {/* Browser bar */}
+                <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: "2.5px solid black" }}>
+                  <div className="flex items-center gap-2">
+                    {[0, 1, 2].map(i => <span key={i} style={{ width: 12, height: 12, border: "1.5px solid black", display: "block", background: "white" }} />)}
                   </div>
-                  <h3 className="text-xl font-bold">Thank you, {demoAnswers.name || "friend"}!</h3>
-                  <p className="text-zinc-500 text-sm max-w-xs mx-auto">
-                    You submitted response with role <strong className="text-black">"{demoAnswers.role}"</strong> and rating <strong className="text-black">{demoAnswers.rating}/5</strong>.
+                  <span style={{ fontFamily: "'Caveat', cursive", fontSize: "13px", color: "#aaa" }}>demo-form.nexform.io</span>
+                  <span style={{ width: 24 }} />
+                </div>
+
+                {/* Form body */}
+                <div className="p-8" style={{ minHeight: 300 }}>
+                  {demoStep < demoQuestions.length ? (
+                    <div>
+                      <div className="flex items-start gap-3 mb-6">
+                        <span style={{ fontFamily: "'Caveat', cursive", fontSize: "14px", fontWeight: 700, color: "#aaa", paddingTop: "2px" }}>0{demoStep + 1} →</span>
+                        <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "22px", fontStyle: "italic", fontWeight: 400, color: "black" }}>
+                          {demoQuestions[demoStep]!.question}
+                        </h3>
+                      </div>
+
+                      {demoQuestions[demoStep]!.type === "text" && (
+                        <div className="pl-8">
+                          <input
+                            type="text"
+                            placeholder={demoQuestions[demoStep]!.placeholder}
+                            value={demoAnswers.name}
+                            autoFocus
+                            onChange={(e) => setDemoAnswers({ ...demoAnswers, name: e.target.value })}
+                            onKeyDown={(e) => { if (e.key === "Enter" && demoAnswers.name.trim()) handleDemoAnswer("name", demoAnswers.name); }}
+                            className="demo-input"
+                          />
+                          <div className="mt-3">
+                            <span className="kbd-hint">ENTER</span>
+                            <span style={{ fontFamily: "'Caveat', cursive", fontSize: "13px", color: "#aaa", marginLeft: 8 }}>to proceed</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {demoQuestions[demoStep]!.type === "select" && (
+                        <div className="pl-8 flex flex-col gap-2">
+                          {demoQuestions[demoStep]!.options?.map((opt, idx) => (
+                            <button key={idx} onClick={() => handleDemoAnswer("role", opt)} className="demo-option">
+                              <span>{opt}</span>
+                              <ChevronRight className="h-4 w-4" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {demoQuestions[demoStep]!.type === "rating" && (
+                        <div className="pl-8">
+                          <div className="flex gap-2 mb-3">
+                            {[1, 2, 3, 4, 5].map(star => (
+                              <button key={star} onClick={() => handleDemoAnswer("rating", star)} className="rating-btn">
+                                {star}★
+                              </button>
+                            ))}
+                          </div>
+                          <p style={{ fontFamily: "'Caveat', cursive", fontSize: "13px", color: "#aaa" }}>Click a number to submit</p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div style={{ width: 52, height: 52, border: "2.5px solid black", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "3px 3px 0 black" }}>
+                        <Check className="h-6 w-6" />
+                      </div>
+                      <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "22px", fontStyle: "italic", fontWeight: 400, marginBottom: 8 }}>
+                        Thank you, {demoAnswers.name || "friend"}!
+                      </h3>
+                      <p style={{ fontFamily: "'Caveat', cursive", fontSize: "15px", color: "#888", marginBottom: 16 }}>
+                        Role: <strong style={{ color: "black" }}>"{demoAnswers.role}"</strong> · Rating: <strong style={{ color: "black" }}>{demoAnswers.rating}/5</strong>
+                      </p>
+                      <button onClick={resetDemo} style={{ fontFamily: "'Caveat', cursive", fontSize: "14px", color: "#aaa", background: "none", border: "none", cursor: "pointer", textDecoration: "underline wavy black", textUnderlineOffset: "3px" }}>
+                        Try again →
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Progress */}
+                  <div className="mt-8 flex items-center justify-between" style={{ borderTop: "1.5px dashed #ddd", paddingTop: 14 }}>
+                    <span style={{ fontFamily: "'Caveat', cursive", fontSize: "12px", color: "#aaa" }}>Progress</span>
+                    <div className="progress-scribble" style={{ width: 120 }}>
+                      <div className="progress-fill" style={{ width: `${(demoStep / demoQuestions.length) * 100}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Features ── */}
+        <section style={{ background: "white", borderTop: "2.5px solid black", borderBottom: "2.5px solid black" }}>
+          <div className="max-w-7xl mx-auto px-6 py-24">
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <div className="section-eyebrow justify-center" style={{ color: "#888" }}>
+                <DiamondDoodle /> Features <DiamondDoodle />
+              </div>
+              <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "38px", fontWeight: 400 }}>
+                Everything you need in a<br /><em>modern form builder</em>
+              </h2>
+              <ScribbleUnderline />
+              <p style={{ fontFamily: "'Caveat', cursive", fontSize: "16px", color: "#888", marginTop: 10 }}>
+                Build responsive forms, view real-time stats, configure developer APIs instantly ✦
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {features.map((f, idx) => (
+                <div key={idx} className="feature-card">
+                  <CornerScribble />
+                  <div className="feature-icon">{f.icon}</div>
+                  <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "20px", fontStyle: "italic", fontWeight: 400, marginBottom: 10 }}>
+                    {f.title}
+                  </h3>
+                  <p style={{ fontFamily: "'Caveat', cursive", fontSize: "15px", color: "#777", lineHeight: 1.6 }}>{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Pricing ── */}
+        <section className="land-noise-bg">
+          <div className="max-w-7xl mx-auto px-6 py-24">
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <div className="section-eyebrow justify-center" style={{ color: "#888" }}>
+                <DiamondDoodle /> Pricing <DiamondDoodle />
+              </div>
+              <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "38px", fontWeight: 400 }}>
+                Simple, <em>honest</em> pricing
+              </h2>
+              <ScribbleUnderline />
+              <p style={{ fontFamily: "'Caveat', cursive", fontSize: "16px", color: "#888", marginTop: 10 }}>
+                Start for free or upgrade to support advanced workflows ✦
+              </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-stretch justify-center gap-8 max-w-4xl mx-auto">
+              {/* Free */}
+              <div className="flex-1 pricing-card">
+                <div>
+                  <span className="plan-badge">Starter</span>
+                  <div className="flex items-baseline gap-1 my-3">
+                    <span className="price-num">$0</span>
+                    <span style={{ fontFamily: "'Caveat', cursive", fontSize: "16px", color: "#888" }}> / month</span>
+                  </div>
+                  <p style={{ fontFamily: "'Caveat', cursive", fontSize: "15px", color: "#888", marginBottom: 20 }}>
+                    For developers and creators test-driving the builder.
                   </p>
-                  <button 
-                    onClick={resetDemo}
-                    className="text-xs text-zinc-400 underline hover:text-black font-medium transition-colors"
-                  >
-                    Try the Demo Form again
-                  </button>
+                  <div style={{ borderTop: "1.5px dashed #ddd", paddingTop: 16 }} className="flex flex-col gap-3">
+                    {["Up to 3 Active Forms", "Public & Unlisted Visibilities", "100 Responses per Form"].map(item => (
+                      <div key={item} className="check-row"><Check className="h-4 w-4 check-icon shrink-0" />{item}</div>
+                    ))}
+                    <div className="check-row" style={{ color: "#ccc", textDecoration: "line-through" }}>
+                      <Check className="h-4 w-4 shrink-0 opacity-20" />Conditional Form Logic
+                    </div>
+                  </div>
                 </div>
-              )}
-              {/* Footer status inside card */}
-              <div className="border-t border-zinc-100 pt-4 mt-6 flex items-center justify-between text-xs text-zinc-400">
-                <span>Progress</span>
-                <div className="w-32 h-1 bg-zinc-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-black transition-all duration-500" 
-                    style={{ width: `${(demoStep / demoQuestions.length) * 100}%` }}
-                  />
+                <Link href="/sign-up" className="scribble-btn-outline" style={{ width: "100%", justifyContent: "center" }}>
+                  Get Started
+                </Link>
+              </div>
+
+              {/* Pro */}
+              <div className="flex-1 pricing-card featured">
+                <CornerScribble color="white" />
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span className="plan-badge" style={{ borderColor: "white", color: "white" }}>Pro Creator</span>
+                    <span style={{ fontFamily: "'Caveat', cursive", fontSize: "12px", fontWeight: 700, background: "white", color: "black", padding: "3px 10px", letterSpacing: "1px" }}>
+                      ✦ POPULAR
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1 my-3">
+                    <span className="price-num">$19</span>
+                    <span style={{ fontFamily: "'Caveat', cursive", fontSize: "16px", color: "#888" }}> / month</span>
+                  </div>
+                  <p style={{ fontFamily: "'Caveat', cursive", fontSize: "15px", color: "#aaa", marginBottom: 20 }}>
+                    For active creators, agencies, and operations.
+                  </p>
+                  <div style={{ borderTop: "1.5px dashed #555", paddingTop: 16 }} className="flex flex-col gap-3">
+                    {["Unlimited Active Forms", "Public, Unlisted & Password-protected", "Unlimited Responses", "Conditional Question Logic", "Scalar API & CSV Exports"].map(item => (
+                      <div key={item} className="check-row" style={{ color: "white" }}>
+                        <Check className="h-4 w-4 shrink-0" />{item}
+                      </div>
+                    ))}
+                  </div>
                 </div>
+                <Link href="/sign-up" className="scribble-btn-solid" style={{ background: "white", color: "black", border: "2.5px solid white", boxShadow: "4px 4px 0 rgba(255,255,255,0.3)", width: "100%", justifyContent: "center" }}>
+                  Get Pro Now →
+                </Link>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-      {/* Feature Showcase Grid */}
-      <section className="bg-zinc-50 border-t border-zinc-100 py-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-black">
-              Everything you need in a modern SaaS Form Builder
+        </section>
+
+        {/* ── CTA ── */}
+        <section className="dark-grid-bg" style={{ borderTop: "2.5px solid black" }}>
+          <div className="max-w-4xl mx-auto text-center px-6 py-24">
+            <div className="section-eyebrow justify-center" style={{ color: "#555" }}>
+              <DiamondDoodle color="white" className="opacity-40" />
+              <span style={{ color: "#555" }}>get started</span>
+              <DiamondDoodle color="white" className="opacity-40" />
+            </div>
+            <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "clamp(32px,5vw,56px)", fontWeight: 400, color: "white", lineHeight: 1.1, marginBottom: 8 }}>
+              Ready to build forms<br />users actually <em>enjoy</em>?
             </h2>
-            <p className="text-zinc-500 font-light">
-              Build responsive dynamic forms, view real-time statistics, and configure developer APIs instantly.
+            <div style={{ maxWidth: 300, margin: "0 auto 16px" }}>
+              <ScribbleUnderline color="white" />
+            </div>
+            <p style={{ fontFamily: "'Caveat', cursive", fontSize: "17px", color: "#666", marginBottom: 32, maxWidth: 420, margin: "12px auto 32px" }}>
+              Create an account in seconds. Zero credit card required to start designing ✦
             </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-white border border-zinc-200 p-8 rounded-2xl space-y-4 hover:border-black transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                <Sliders className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-black">Dynamic Form Builder</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Visual block editor with multiple inputs: text, numbers, dropdowns, ratings, dates, and validation rules. Generate schemas dynamically.
-              </p>
-            </div>
-            {/* Feature 2 */}
-            <div className="bg-white border border-zinc-200 p-8 rounded-2xl space-y-4 hover:border-black transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                <Eye className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-black">Public vs Unlisted Forms</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Choose form visibility. Public forms appear in the explore gallery. Unlisted forms are hidden and only accessible via a direct link.
-              </p>
-            </div>
-            {/* Feature 3 */}
-            <div className="bg-white border border-zinc-200 p-8 rounded-2xl space-y-4 hover:border-black transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                <Gauge className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-black">Response Analytics</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Track completion metrics, drop-offs, and inspect responses directly from your dashboard. Ready with one-click CSV exports.
-              </p>
-            </div>
-            {/* Feature 4 */}
-            <div className="bg-white border border-zinc-200 p-8 rounded-2xl space-y-4 hover:border-black transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                <FileCode className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-black">Type-Safe & Seeded Stack</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Powered by Next.js, tRPC, Zod, and Drizzle ORM. Seeded with demo templates for movie logs, tech events, and gaming surveys.
-              </p>
-            </div>
-            {/* Feature 5 */}
-            <div className="bg-white border border-zinc-200 p-8 rounded-2xl space-y-4 hover:border-black transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                <Command className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-black">Scalar API Documentation</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Expose dynamic tRPC operations inside a beautiful, structured Scalar API explorer sandbox out of the box.
-              </p>
-            </div>
-            {/* Feature 6 */}
-            <div className="bg-white border border-zinc-200 p-8 rounded-2xl space-y-4 hover:border-black transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                <Shield className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-black">Spam Protection</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Built-in rate limiting and submission security keeping public form links clean without requiring login.
-              </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/sign-up" className="scribble-btn-solid" style={{ background: "white", color: "black", border: "2.5px solid white", boxShadow: "4px 4px 0 rgba(255,255,255,0.25)" }}>
+                Sign Up Free <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/dashboard" className="scribble-btn-outline-white">
+                Explore Seeded Demo
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
-      {/* Brutalist Pricing Section */}
-      <section className="py-24 max-w-7xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-black">
-            Simple, honest pricing
-          </h2>
-          <p className="text-zinc-500 font-light">
-            Start building for free or upgrade to support advanced workflows.
-          </p>
-        </div>
-        <div className="flex flex-col md:flex-row items-stretch justify-center gap-8 max-w-4xl mx-auto">
-          {/* Free Tier */}
-          <div className="flex-1 bg-white border border-zinc-200 p-8 rounded-2xl flex flex-col justify-between space-y-8 hover:border-zinc-400 transition-colors">
-            <div className="space-y-4">
-              <span className="text-zinc-400 text-xs font-mono tracking-widest uppercase">Basic Access</span>
-              <h3 className="text-2xl font-bold">Starter Plan</h3>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold font-mono">$0</span>
-                <span className="text-zinc-400 text-sm">/ month</span>
-              </div>
-              <p className="text-zinc-500 text-sm">
-                For developers and creators test-driving Typeform-style builder tools.
-              </p>
-              <hr className="border-zinc-100" />
-              <ul className="space-y-3 text-sm text-zinc-600">
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span>Up to 3 Active Forms</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span>Public & Unlisted Visibilities</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span>100 Responses per Form</span>
-                </li>
-                <li className="flex items-center gap-2 text-zinc-400 line-through">
-                  <span>Conditional Form Logic</span>
-                </li>
-              </ul>
-            </div>
-            <Link 
-              href="/sign-up"
-              className="w-full text-center py-3 rounded-lg border border-zinc-200 hover:border-black font-semibold text-sm transition-colors duration-200"
-            >
-              Get Started
-            </Link>
-          </div>
-          {/* Pro Tier - Brutalist highlighted */}
-          <div className="flex-1 bg-white border-2 border-black p-8 rounded-2xl flex flex-col justify-between space-y-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:scale-[1.01] relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-black text-white text-[10px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-              Popular
-            </div>
-            <div className="space-y-4">
-              <span className="text-zinc-400 text-xs font-mono tracking-widest uppercase">Advanced Features</span>
-              <h3 className="text-2xl font-bold">Pro Creator</h3>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold font-mono">$19</span>
-                <span className="text-zinc-400 text-sm">/ month</span>
-              </div>
-              <p className="text-zinc-500 text-sm">
-                Perfect for active creators, agencies, and operations.
-              </p>
-              <hr className="border-black/10" />
-              <ul className="space-y-3 text-sm text-zinc-600">
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span className="text-black font-medium">Unlimited Active Forms</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span>Public, Unlisted & Password-protected</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span className="text-black font-medium">Unlimited Responses</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span>Conditional Question Logic</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-black shrink-0" />
-                  <span>Scalar API & CSV Exports</span>
-                </li>
-              </ul>
-            </div>
-            <Link 
-              href="/sign-up"
-              className="w-full text-center py-3 bg-black hover:bg-zinc-800 text-white rounded-lg font-semibold text-sm transition-colors duration-200"
-            >
-              Get Pro Now
-            </Link>
-          </div>
-        </div>
-      </section>
-      {/* Dynamic CTA */}
-      <section className="bg-black text-white py-20 relative overflow-hidden border-t border-zinc-800">
-        <div className="max-w-4xl mx-auto text-center px-6 space-y-6 relative z-10">
-          <h2 className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Ready to build forms that users actually enjoy?
-          </h2>
-          <p className="text-zinc-400 font-light max-w-lg mx-auto text-sm sm:text-base">
-            Create an account in seconds. Zero credit card required to start designing. Check the demo to see it in action.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link 
-              href="/sign-up"
-              className="bg-white text-black hover:bg-zinc-100 px-8 py-3.5 rounded-lg font-medium text-sm transition-all flex items-center gap-2 group w-full sm:w-auto justify-center"
-            >
-              Sign Up Free
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-            <Link 
-              href="/dashboard"
-              className="border border-zinc-700 hover:border-white px-8 py-3.5 rounded-lg font-medium text-sm transition-all w-full sm:w-auto text-center"
-            >
-              Explore Seeded Demo
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+      </div>
+    </>
   );
 }

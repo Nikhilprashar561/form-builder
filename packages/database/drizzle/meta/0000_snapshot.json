@@ -1,5 +1,5 @@
 {
-  "id": "94fb37e0-a1ad-4444-9da0-e3227af89006",
+  "id": "9842326c-5557-4696-bf4e-e4655db6851b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -133,7 +133,7 @@
           "name": "form_link",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "status": {
           "name": "status",
@@ -168,7 +168,7 @@
           "name": "expires_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -402,13 +402,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "submitted_at": {
-          "name": "submitted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -438,21 +431,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "responses_submitted_at_idx": {
-          "name": "responses_submitted_at_idx",
-          "columns": [
-            {
-              "expression": "submitted_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -466,7 +444,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         },
         "form_submission_respondent_id_users_id_fk": {

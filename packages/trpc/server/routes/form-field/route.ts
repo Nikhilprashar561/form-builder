@@ -1,3 +1,4 @@
+// packages/trpc/server/routes/form-field/index.ts
 import { authenticationProcedure, router } from "../../trpc";
 import { generatePath } from "../../utils/path-generator";
 import {
@@ -12,73 +13,85 @@ import {
   updateCreatedFormFieldInput,
   updateCreatedFormFieldOutput,
 } from "./model";
+import { formFields } from "../../services";
 
-const TAGS = ["Authentication"];
-const getPath = generatePath("/authentication");
+const TAGS = ["Form Fields"];
+const getPath = generatePath("/form-fields");
 
 export const formFieldRouter = router({
+
   createNewFormField: authenticationProcedure
     .meta({
       openapi: {
         method: "POST",
-        path: getPath("/createNewFormField"),
+        path: getPath("/create"),
         tags: TAGS,
         protect: true,
       },
     })
     .input(createNewFormFieldInput)
     .output(createNewFormFieldOutput)
-    .mutation(),
+    .mutation(async ({ input }) => {
+      return formFields.createNewFormField(input);
+    }),
 
   updateCreatedFormField: authenticationProcedure
     .meta({
       openapi: {
         method: "PATCH",
-        path: getPath("/updateCreatedFormField"),
+        path: getPath("/update"),
         tags: TAGS,
         protect: true,
       },
     })
     .input(updateCreatedFormFieldInput)
     .output(updateCreatedFormFieldOutput)
-    .mutation(),
+    .mutation(async ({ input }) => {
+      return formFields.updateCreatedFormField(input);
+    }),
 
   deleteCreatedFormField: authenticationProcedure
     .meta({
       openapi: {
-        method: "PATCH",
-        path: getPath("/updateCreatedFormField"),
+        method: "DELETE",
+        path: getPath("/delete"),
         tags: TAGS,
         protect: true,
       },
     })
     .input(deleteCreatedFormFieldInput)
     .output(deleteCreatedFormFieldOutput)
-    .mutation(),
+    .mutation(async ({ input }) => {
+      return formFields.deleteCreatedFormField(input);
+    }),
 
   getOneSpecificFormField: authenticationProcedure
     .meta({
       openapi: {
-        method: "PATCH",
-        path: getPath("/updateCreatedFormField"),
+        method: "GET", 
+        path: getPath("/get-one"),
         tags: TAGS,
         protect: true,
       },
     })
     .input(getOneSpecificFormFieldInput)
     .output(getOneSpecificFormFieldOutput)
-    .query(),
+    .query(async ({ input }) => { 
+      return formFields.getOneSpecificFormField(input);
+    }),
 
   getAllFormFieldsOfOneForm: authenticationProcedure
     .meta({
       openapi: {
-        method: "PATCH",
-        path: getPath("/updateCreatedFormField"),
+        method: "GET", 
+        path: getPath("/get-all"),
         tags: TAGS,
         protect: true,
       },
     })
     .input(getAllFormFieldsOfOneFormInput)
     .output(getAllFormFieldsOfOneFormOutput)
-    .query(),
+    .query(async ({ input }) => {
+      return formFields.getAllFormFieldsOfOneForm(input);
+    }),
 });

@@ -8,10 +8,10 @@ import {
     getSubmitFormOutput
 } from "./model";
 
-const TAGS = ["Authentication"];
-const getPath = generatePath("/authentication");
+const TAGS = ["Form Submission"];
+const getPath = generatePath("/form-submission");
 
-export const formFieldRouter = router({
+export const finalFormSubmission = router({
   submitForm: publicProcedure
     .meta({
       openapi: {
@@ -29,12 +29,11 @@ export const formFieldRouter = router({
     getFormSubmission: authenticationProcedure.meta({
         openapi: {
         method: "POST",
-        path: getPath("/formSubmission"),
+        path: getPath("/getFormSubmission"),
         tags: TAGS,
         protect: true
       },
     }).input(getSubmitFormInput).output(getSubmitFormOutput).query(async ({ input }) => {
         return formSubmission.getFormSubmissions(input);
     })
-
 });

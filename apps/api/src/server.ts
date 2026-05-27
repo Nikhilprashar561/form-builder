@@ -1,4 +1,6 @@
+
 import express from "express";
+import cookieParser from "cookie-parser";
 import { logger } from "@repo/logger";
 import cors from "cors";
 
@@ -11,27 +13,29 @@ import { serverRouter, createContext } from "@repo/trpc/server";
 import { env } from "./env";
 
 export const app = express();
+
 const openApiDocument = generateOpenApiDocument(serverRouter, {
   title: "NexForm OpenAPI",
   version: "1.0.0",
   baseUrl: env.BASE_URL.concat("/api"),
 });
 
-  app.use(
-    cors({
-      origin: "http://localhost:3000",
-      credentials: true
-    }),
-  )
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
+app.use(cookieParser());  
 
 app.get("/", (req, res) => {
-  return res.json({ message: "Streamyst is up and running..." });
+  return res.json({ message: "NexForm API is up and running..." });
 });
 
 app.get("/health", (req, res) => {
-  return res.json({ message: "Streamyst server is healthy", healthy: true });
+  return res.json({ message: "NexForm server is healthy", healthy: true });
 });
 
 logger.debug(`openapi.json: ${env.BASE_URL}/openapi.json`);
@@ -58,7 +62,6 @@ app.use(
   }),
 );
 
-// ✅ Global error handler middleware - MUST be last
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   logger.error("Unhandled error:", {
     message: err?.message,
@@ -66,7 +69,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     stack: err?.stack,
   });
 
-  // Ensure we always respond with JSON, never HTML
   if (!res.headersSent) {
     res.status(err?.status || 500).json({
       error: {

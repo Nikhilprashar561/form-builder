@@ -6,7 +6,7 @@ export interface TRPCCtxUser {
 }
 
 export interface TRPCContext {
-  cerateCookie: ReturnType<typeof createCookiesFactory>;
+  createCookie: ReturnType<typeof createCookiesFactory>;
   getCookie: ReturnType<typeof getCookieFactory>;
   clearCookie: ReturnType<typeof clearCookieFactory>;
 
@@ -19,7 +19,7 @@ export async function createContext({
 }: CreateExpressContextOptions): Promise<TRPCContext> {
 
     const ctx: TRPCContext = {
-        cerateCookie: createCookiesFactory(res),
+        createCookie: createCookiesFactory(res),
         getCookie: getCookieFactory(req),
         clearCookie: clearCookieFactory(res),
         user: undefined

@@ -1,6 +1,5 @@
 import NexFormLanding from "~/components/Landing";
 import Navbar from "~/components/Navbar";
-import Footer from "~/components/Footer";
 
 export default async function Home() {
   return (
@@ -10,9 +9,6 @@ export default async function Home() {
         <NexFormLanding />
         {/* <LandingPage /> */}
       </main>
-      <Footer />
     </div>
   );
 }
-
-// c:\Users\nikhi\.gemini\antigravity\scratch\form-builder\apps\web\components\Landing.tsx
