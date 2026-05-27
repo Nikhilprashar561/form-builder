@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useUser, useSignOut, useUpdateProfile, useDeleteAccount } from "~/hooks/api/auth";
 
+import Navbar from "~/components/Navbar";
+import Footer from "~/components/Footer";
+
 interface UpdateProfileInput {
   fullName: string;
   email: string;
@@ -294,7 +297,7 @@ const UserProfilePage = () => {
         }
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
-
+      <Navbar />
       <div className="noise-bg min-h-screen pt-20 pb-16 px-6">
         <div className="max-w-2xl mx-auto">
 
@@ -474,6 +477,7 @@ const UserProfilePage = () => {
 
         </div>
       </div>
+      <Footer />
     </>
   );
 };

@@ -257,7 +257,6 @@ const VerifyEmailPage = () => {
         }
         .resend-btn:disabled { color: #aaa; cursor: not-allowed; text-decoration: none; }
       `}</style>
-
       <div className="noise-bg grid-bg mt-4 min-h-screen flex items-center justify-center px-6 py-16 relative overflow-hidden">
 
         {/* Background doodles */}
